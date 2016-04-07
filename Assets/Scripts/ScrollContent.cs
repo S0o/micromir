@@ -10,7 +10,7 @@ public class ScrollContent : MonoBehaviour {
         rectTrans = this.transform.GetComponent<RectTransform>().rect;
     }
 	
-	// Update is called once per frame
+	
 	void Update () {
         rectTrans.height = 390 * contentCount % 2;
     }

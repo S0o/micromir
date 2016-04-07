@@ -1,7 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class UIscript : MonoBehaviour {
+    public string currentGalleryName;
+    public string currentPhotoName;
+    public Transform currentGalleryPortraitPanel;
 
     public void ClosePanel(Transform Panel)
     {
@@ -11,13 +15,8 @@ public class UIscript : MonoBehaviour {
     {
         Panel.gameObject.SetActive(true);
     }
-    // Use this for initialization
-    void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    public void ChangeText(Transform textTrans, string text)
+    {
+        textTrans.GetComponent<Text>().text = text;
+    }
 }

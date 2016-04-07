@@ -7,15 +7,24 @@ using System.Collections;
 
 public class ListOfGalleriesEditor : Editor
 {
-
+    ListOfGalleries listScript;
+   
     public override void OnInspectorGUI()
     {
-        DrawDefaultInspector();
+       DrawDefaultInspector();
+       
+        listScript = (ListOfGalleries)target;
         if (GUILayout.Button("Renew"))
         {
-        
-        ListOfGalleries listScript = (ListOfGalleries)target;
-        listScript.Renew();
+            listScript.Renew();
+            EditorUtility.SetDirty(target);
         }
+
+        if (GUILayout.Button("Add gallery"))
+        {
+            AddGalleryWindow.GetWindow<AddGalleryWindow>().list= listScript;
+        }
+
+      
     }
 }
