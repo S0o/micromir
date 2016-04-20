@@ -10,7 +10,7 @@ public class Photo : MonoBehaviour {
     public string label1;
     public string label2;
     public Gallery gallery;
-
+#if UNITY_EDITOR
     public void ObjSort()
     {
 
@@ -71,4 +71,5 @@ public class Photo : MonoBehaviour {
        Sort();
        gallery.Renew();
     }
+#endif
 }

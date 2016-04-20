@@ -2,8 +2,11 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.Events;
+#endif 
 using UnityEngine.Events;
 
 public class ListOfGalleries : MonoBehaviour {
@@ -14,18 +17,20 @@ public class ListOfGalleries : MonoBehaviour {
     public GameObject portraitCanvas;
     public GameObject landscapeCanvas;
     public GameObject galleryButtonPrefab;
+    public GameObject photoButtonPrefab;
     public GameObject galleryPanelPrefab;
     public GameObject photoViewer;
     public string nameVar;
-    public Transform trans;
+   
    
     public int buttonCount;
     int _index=0;
+#if UNITY_EDITOR
     public void GenerateButtonOnClick(int index)
     {
         //int _index = 0;
       
-        UnityEvent onClick = galleryButtons[index].GetComponent<Button>().onClick;
+       /* UnityEvent onClick = galleryButtons[index].GetComponent<Button>().onClick;
        
        
 
@@ -35,14 +40,8 @@ public class ListOfGalleries : MonoBehaviour {
         generator.text = portraitCanvas.transform.GetChild(1).GetChild(0).GetComponent<Text>();
         generator.name= galleries[index].galleryName;
         generator.GenerateGallery();
-        //var  targetInfo = UnityEvent.GetValidMethodInfo(managerUI.ChangeText(portraitCanvas.transform.GetChild(1).GetChild(0), galleries[0].galleryName), "ChangeText", new System.Type[] { typeof(Transform), typeof(string)});
-        //  UnityAction methodDelegate = System.Delegate.CreateDelegate(typeof(UnityAction), managerUI, targetInfo) as UnityAction;
-        // UnityEventTools.AddPersistentListener(onClick, methodDelegate);
-        // UnityEventTools.RegisterPersistentListener(onClick, 0,delegate { UIManager.OpenPanel(managerUI.currentGalleryPortraitPanel); });
-        // UnityEventTools.RegisterPersistentListener(onClick, 1, delegate { managerUI.OpenPanel(portraitCanvas.transform.GetChild(1)); });
-        //UnityEventTools.RegisterPersistentListener(onClick, 2, () =>  managerUI.ChangeText(portraitCanvas.transform.GetChild(1).GetChild(0), "asdas"));
-        // UnityEventTools.RegisterPersistentListener(onClick, 3, delegate { managerUI.ClosePanel(portraitCanvas.transform.GetChild(0)); });
-
+        */
+   
     }
 
     public void CreateGallaryPanel(Gallery gal)
@@ -72,7 +71,11 @@ public class ListOfGalleries : MonoBehaviour {
         obj.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = gal.galleryName;
         obj.GetComponent<Image>().sprite = gal.galleryAvatar;
         justifyGalleries();
-        GenerateButtonOnClick(galleries.IndexOf(gal));
+        //  GenerateButtonOnClick(galleries.IndexOf(gal));
+        obj.GetComponent<GalleryButton>().gallery=gal;
+        obj.GetComponent<GalleryButton>().portraitCanvas = portraitCanvas;
+        obj.GetComponent<GalleryButton>().text = portraitCanvas.transform.GetChild(1).GetChild(0).GetComponent<Text>();
+        obj.GetComponent<GalleryButton>().name = gal.galleryName;
     }
 
 
@@ -101,6 +104,12 @@ public class ListOfGalleries : MonoBehaviour {
     }
    
 
+    public void ContentReHeight(GameObject panel)
+    {
+        Transform contentTrans = panel.transform.GetChild(0).GetChild(0);
+        Debug.Log(contentTrans.name);
+        contentTrans.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 400 * (1+contentTrans.childCount / 3)); //400*(contentTrans.childCount%2));
+    }
     public void justifyGalleries()
     {
         galleries.Clear();
@@ -114,10 +123,13 @@ public class ListOfGalleries : MonoBehaviour {
             
             foreach (var obj in GameObject.FindGameObjectsWithTag("gallery"))
             {
-               
-                if ( obj.GetComponent<Gallery>().id==i)
-                galleries.Add(obj.GetComponent<Gallery>());
-                obj.name = "Gallery " + obj.GetComponent<Gallery>().galleryName;
+
+                if (obj.GetComponent<Gallery>().id == i)
+                {
+                    galleries.Add(obj.GetComponent<Gallery>());
+                    obj.name = "Gallery " + obj.GetComponent<Gallery>().galleryName;
+                    ContentReHeight(obj.GetComponent<Gallery>().portraitPanel);
+                }
             }
         }
     }
@@ -152,13 +164,14 @@ public class ListOfGalleries : MonoBehaviour {
 
         justifyGalleries();
         justifyButtons();
+        ContentReHeight(portraitCanvas.transform.GetChild(0).gameObject);
        // CreateGallaryButtons();
        // GenerateButtonOnClick(0);
-      
-        
-     
-       
+
+
+
+
     }
 
-
+#endif 
 }

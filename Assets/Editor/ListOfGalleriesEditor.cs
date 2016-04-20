@@ -11,7 +11,7 @@ public class ListOfGalleriesEditor : Editor
    
     public override void OnInspectorGUI()
     {
-       //DrawDefaultInspector();
+      // DrawDefaultInspector();
        
         listScript = (ListOfGalleries)target;
         if (GUILayout.Button("Renew"))

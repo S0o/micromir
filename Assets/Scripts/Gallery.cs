@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+#if UNITY_EDITOR
 using UnityEditor.Events;
+#endif 
 using UnityEngine.Events;
 
 public class Gallery : MonoBehaviour
@@ -18,9 +20,8 @@ public class Gallery : MonoBehaviour
     public ListOfGalleries listOfGallaries;
     public GameObject portraitPanel;
     public GameObject landscapePanel;
-    public GameObject buttonPrefab;
-    public GameObject photoViewer;
 
+#if UNITY_EDITOR
     public void DeleteGallery()
     {
         id = 99999;
@@ -102,7 +103,7 @@ public class Gallery : MonoBehaviour
     }
     public void CreatePhotoButton(Photo photo)
     {
-        GameObject obj = Instantiate(listOfGallaries.galleryButtonPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+        GameObject obj = Instantiate(listOfGallaries.photoButtonPrefab, Vector3.zero, Quaternion.identity) as GameObject;
         obj.tag = "portPhotButt";
         obj.transform.SetParent(portraitPanel.transform.GetChild(0).GetChild(0));
         obj.gameObject.transform.SetAsLastSibling();
@@ -110,21 +111,26 @@ public class Gallery : MonoBehaviour
         buttons.Add(obj);
         obj.transform.GetChild(0).GetChild(0).GetComponent<Text>().text =photo.name;
         obj.GetComponent<Image>().sprite = photo.avatar;
-       
-        GenerateButtonOnClick(photos.IndexOf(photo));
+        obj.GetComponent<PhotoButton>().photo = photo;
+        obj.GetComponent<PhotoButton>().gallery = this;
+        obj.GetComponent<PhotoButton>().portraitCanvas = listOfGallaries.portraitCanvas;
+        obj.GetComponent<PhotoButton>().name = photo.name;
+        obj.GetComponent<PhotoButton>().photoViewer = listOfGallaries.photoViewer;
+
     }
     public void GenerateButtonOnClick(int index)
     {
         UnityEvent onClick = buttons[index].GetComponent<Button>().onClick;
 
  
-        ButtonGenerator generator = buttons[index].gameObject.AddComponent<ButtonGenerator>();
+      /*  ButtonGenerator generator = buttons[index].gameObject.AddComponent<ButtonGenerator>();
         generator.photo = photos[index];
         generator.gallery = this;
         generator.portraitCanvas = listOfGallaries.portraitCanvas;
         generator.name = photos[index].name;
         generator.photoViewer = listOfGallaries.photoViewer;
-        generator.GeneratePhoto();
+        generator.GeneratePhoto();*/
+
     }
  
     public void Initialisation()
@@ -159,8 +165,11 @@ public class Gallery : MonoBehaviour
             foreach (var obj in GameObject.FindGameObjectsWithTag("photo"))
             {
 
-                if ((obj.GetComponent<Photo>().gallery == this)&&(obj.GetComponent<Photo>().id == i))
+                if ((obj.GetComponent<Photo>().gallery == this) && (obj.GetComponent<Photo>().id == i))
+                {
                     photos.Add(obj.GetComponent<Photo>());
+                    obj.name = obj.GetComponent<Photo>().photoName;
+                }
             }
         }
     }
@@ -176,9 +185,10 @@ public class Gallery : MonoBehaviour
             {
 
                 GameObject gObj = obj.gameObject;
-               
-                if ( (gObj.tag== "portPhotButt") &&(gObj.transform.GetSiblingIndex() == i)
-                   && (gObj.GetComponent<ButtonGenerator>().gallery == this)
+                
+                if  (gObj.tag== "portPhotButt") 
+                    if ((gObj.transform.GetSiblingIndex() == i)
+                   && (gObj.GetComponent<PhotoButton>().gallery == this)
                     )
                  
                         buttons.Add(gObj);
@@ -191,6 +201,6 @@ public class Gallery : MonoBehaviour
             }
         }
     }
-
+#endif 
 }
 
