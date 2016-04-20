@@ -11,7 +11,7 @@ public class AddPhotoWindow : EditorWindow
     Sprite image;
     public Gallery gallery;
     public string galleryName;
-    public string photoName;
+    public string photoName="Photo Name";
     public static void ShowWindow()
     {
         EditorWindow.GetWindow(typeof(AddPhotoWindow));
@@ -20,11 +20,11 @@ public class AddPhotoWindow : EditorWindow
     void OnGUI()
     {
         GUILayout.Label("Add new photo to "+galleryName+" gallery ", EditorStyles.boldLabel);
-        photoName = EditorGUILayout.TextField("Name", gallaryName);
+        photoName = EditorGUILayout.TextField("Name", photoName);
         avatar = (Sprite)EditorGUILayout.ObjectField("Avatar", avatar, typeof(Sprite), false); 
         image= (Sprite)EditorGUILayout.ObjectField("Photo", image, typeof(Sprite), false);
 
-        if (GUILayout.Button("Add gallery"))
+        if (GUILayout.Button("Add Photo"))
         {
             gallery.AddNewPhoto(photoName, avatar,image);
             this.Close();

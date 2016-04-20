@@ -29,7 +29,7 @@ public class GalleryEditor : Editor
    
     public override void OnInspectorGUI()
     {
-        //DrawDefaultInspector();
+     // DrawDefaultInspector();
         serializedObject.Update();
 
         EditorGUILayout.PropertyField(galleryName);
@@ -45,22 +45,21 @@ public class GalleryEditor : Editor
         
 
         Gallery galleryScript = (Gallery)target;
-        galleryScript.Renew();
-     /*   if (GUILayout.Button("Renew"))
-        {
-          
-           galleryScript.Renew();
-        }*/
+        // galleryScript.Renew();
+        /*   if (GUILayout.Button("Renew"))
+           {
 
-        for (int i = 0; i < photosCount.intValue; i++)
+              galleryScript.Renew();
+           }*/
+
+
+        if (GUILayout.Button("Renew"))
         {
-            
-            if (GUILayout.Button("Edit Photo"))
-            {
-                
-            }
+            galleryScript.Renew();
+
+            serializedObject.ApplyModifiedProperties();
+
         }
-
         if (GUILayout.Button("Add Photo"))
         {
 

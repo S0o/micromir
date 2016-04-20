@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
+using UnityEditor.Events;
+using UnityEngine.Events;
+
 public class Gallery : MonoBehaviour
 {
 
@@ -10,10 +14,12 @@ public class Gallery : MonoBehaviour
     public int photosCount;
     public Sprite galleryAvatar;
     public List <Photo> photos= new List<Photo>();
+    public List<GameObject> buttons = new List<GameObject>();
     public ListOfGalleries listOfGallaries;
     public GameObject portraitPanel;
     public GameObject landscapePanel;
-
+    public GameObject buttonPrefab;
+    public GameObject photoViewer;
 
     public void DeleteGallery()
     {
@@ -28,10 +34,7 @@ public class Gallery : MonoBehaviour
     }
     public void ObjSort()
     {
-       // foreach(var gallery in listOfGallaries.gallaries)
-       // {
-          //  gallery.gameObject.transform.SetSiblingIndex(gallery.id);
-       // }
+     
         for (int i = 0; i < listOfGallaries.galleries.Count; i++)
         {
             listOfGallaries.galleries[i].gameObject.transform.SetSiblingIndex(listOfGallaries.galleries[i].id);
@@ -74,6 +77,7 @@ public class Gallery : MonoBehaviour
     }
     public void AddNewPhoto(string name, Sprite avatar, Sprite image)
     {
+        Initialisation();
         GameObject obj = new GameObject();
         obj.transform.SetParent(gameObject.transform);
         obj.AddComponent<Photo>().id = photos.Count;
@@ -81,15 +85,48 @@ public class Gallery : MonoBehaviour
         obj.GetComponent<Photo>().photoName = name;
         obj.GetComponent<Photo>().avatar = avatar;
         obj.GetComponent<Photo>().image = image;
+        obj.GetComponent<Photo>().gallery = this;
         obj.gameObject.name = name;
+        justifyPhotos();
+        CreatePhotoButton(obj.GetComponent<Photo>());
 
-
-       // CreateGallaryPanel(obj.GetComponent<Gallery>());
-       // CreatePhotoButton(obj.GetComponent<Gallery>());
-       // Renew();
+        Renew();
 
     }
 
+    public void buttonRenew(GameObject buttObj)
+    {
+        Photo photo = photos[buttons.IndexOf(buttObj)];
+        buttObj.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = photo.photoName;
+        buttObj.GetComponent<Image>().sprite = photo.avatar;
+    }
+    public void CreatePhotoButton(Photo photo)
+    {
+        GameObject obj = Instantiate(listOfGallaries.galleryButtonPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+        obj.tag = "portPhotButt";
+        obj.transform.SetParent(portraitPanel.transform.GetChild(0).GetChild(0));
+        obj.gameObject.transform.SetAsLastSibling();
+        obj.transform.localScale = new Vector3(1, 1, 1);
+        buttons.Add(obj);
+        obj.transform.GetChild(0).GetChild(0).GetComponent<Text>().text =photo.name;
+        obj.GetComponent<Image>().sprite = photo.avatar;
+       
+        GenerateButtonOnClick(photos.IndexOf(photo));
+    }
+    public void GenerateButtonOnClick(int index)
+    {
+        UnityEvent onClick = buttons[index].GetComponent<Button>().onClick;
+
+ 
+        ButtonGenerator generator = buttons[index].gameObject.AddComponent<ButtonGenerator>();
+        generator.photo = photos[index];
+        generator.gallery = this;
+        generator.portraitCanvas = listOfGallaries.portraitCanvas;
+        generator.name = photos[index].name;
+        generator.photoViewer = listOfGallaries.photoViewer;
+        generator.GeneratePhoto();
+    }
+ 
     public void Initialisation()
     {
         listOfGallaries = transform.parent.GetComponent<ListOfGalleries>();
@@ -97,11 +134,63 @@ public class Gallery : MonoBehaviour
 
     public void Renew()
     {
+        photosCount = 0;
         Initialisation();
         Sort();
+        justifyPhotos();
+        justifyButtons();
         listOfGallaries.Renew();
+        
     }
- 
+
+    public void justifyPhotos()
+    {
+        photosCount = 0;
+        photos.Clear();
+        foreach (var obj in GameObject.FindGameObjectsWithTag("photo"))
+        {
+            if(obj.GetComponent<Photo>().gallery==this)
+            photosCount++;
+        }
+
+        for (int i = 0; i < photosCount; i++)
+        {
+
+            foreach (var obj in GameObject.FindGameObjectsWithTag("photo"))
+            {
+
+                if ((obj.GetComponent<Photo>().gallery == this)&&(obj.GetComponent<Photo>().id == i))
+                    photos.Add(obj.GetComponent<Photo>());
+            }
+        }
+    }
+    public void justifyButtons()
+    {
+        
+        buttons.Clear();
+
+        for (int i = 0; i < photosCount; i++)
+        {
+          
+            foreach (Button obj in Resources.FindObjectsOfTypeAll(typeof(Button))as Button[])
+            {
+
+                GameObject gObj = obj.gameObject;
+               
+                if ( (gObj.tag== "portPhotButt") &&(gObj.transform.GetSiblingIndex() == i)
+                   && (gObj.GetComponent<ButtonGenerator>().gallery == this)
+                    )
+                 
+                        buttons.Add(gObj);
+
+              
+            }
+            foreach (var obj in buttons)
+            {
+                buttonRenew(obj);
+            }
+        }
+    }
 
 }
 
