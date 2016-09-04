@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Languages>
+
+	<Language>
+	<!--- English -->
+	<GalleryName>first</GalleryName>
+	<Info>Gallery, which asdflfk;al aks;flka ;slfka;flka s;lfka;
+	asfa;sflaskf a;slfk</Info>
+	</Language>
+	
+	<Language>
+	<!--- Russian -->
+	<GalleryName>Первая</GalleryName>
+	<Info>Крутая такая галлерея</Info>
+	</Language>
+ 
+</Languages>

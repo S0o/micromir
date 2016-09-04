@@ -1,75 +1,65 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 
-public class Photo : MonoBehaviour {
-
-    public Sprite image;
-    public Sprite avatar;
+public class Photo : MonoBehaviour, ISerializationCallbackReceiver
+{
+    public Sprite photo;
+    public Sprite photoAvatar;
     public string photoName;
-    public int id;
-    public string label1;
-    public string label2;
-    public Gallery gallery;
-#if UNITY_EDITOR
-    public void ObjSort()
+    public string photoInfo;
+    public string photoLabel1;
+    public string photoLabel2;
+    public PhotoButton photoButton;
+    public SubGallery subGallery;
+
+    //langauges block
+    public List<Dictionary<string, string>> languages = new List<Dictionary<string, string>>();
+    public List<string> _keys = new List<string>();
+    public List<string> _values = new List<string>();
+    public int rawsCount;
+
+
+    public void OnBeforeSerialize()
     {
 
-        for (int i = 0; i < gallery.photos.Count; i++)
+        _keys.Clear();
+        _values.Clear();
+        rawsCount = 0;
+
+        foreach (var dict in languages)
         {
-            gallery.photos[i].gameObject.transform.SetSiblingIndex(gallery.photos[i].id);
-            gallery.buttons[i].gameObject.transform.SetSiblingIndex(gallery.photos[i].id);
-        }
-    }
-
-    public void Sort()
-    {
-
-        if (id >= gallery.photos.Count) id = gallery.photos.Count - 1;
-        else if (id < 0) id = 0;
-
-        int idNext = id;
-        int idCurrent = 0;
-
-        id = -1;
-
-        for (int i = 0; i < gallery.photos.Count; i++)
-        {
-            if (gallery.photos[i] == this)
+            rawsCount = 0;
+            foreach (var kvp in dict)
             {
-                idCurrent = i;
-                break;
+                _keys.Add(kvp.Key);
+                _values.Add(kvp.Value);
+                rawsCount++;
             }
         }
+    }
 
-        for (int i = 0; i < gallery.photos.Count; i++)
+    public void OnAfterDeserialize()
+    {
+
+        languages.Clear();
+
+        int dictCount = 0;
+        int curRawCount = 0;
+        languages.Add(new Dictionary<string, string>());
+        for (int i = 0; i < _keys.Count; i++)
         {
-            if (i == idCurrent) continue;
-            if (i > idCurrent && i <= idNext)
-                gallery.photos[i].id--;
-            if (i >= idNext && i < idCurrent)
+            if (curRawCount == rawsCount)
             {
-                gallery.photos[i].id++;
+                languages.Add(new Dictionary<string, string>());
+                dictCount++;
+                curRawCount = 0;
             }
+            curRawCount++;
+            languages[dictCount].Add(_keys[i], _values[i]);
         }
-        id = idNext;
-        ObjSort();
-    }
-    public void DeletePhoto()
-    {
-        id = 99999;
-        Renew();
-        gameObject.tag = "Untagged";
-        DestroyImmediate(gallery.buttons[id].gameObject);
-        gallery.Renew();
 
-       
-        DestroyImmediate(gameObject);
     }
-    public void Renew()
-    {
-       // Initialisation();
-       Sort();
-       gallery.Renew();
-    }
-#endif
+
 }

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Languages>
+
+	<Language>
+	<!--- English -->
+	<AppName>MicroWorld</AppName>
+	<AppInfo>MicroWorld</AppInfo>
+	</Language>
+	
+	<Language>
+	<!--- Russian -->
+	<AppName>Микромир</AppName>
+	<AppInfo>MicroWorld</AppInfo>
+	</Language>
+ 
+</Languages>

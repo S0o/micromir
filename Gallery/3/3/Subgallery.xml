@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Languages>
+
+	<Language>
+	<!--- English -->
+	<SubGalleryName>first</SubGalleryName>
+	<Info>Sub gallery first info</Info>
+	</Language>
+	
+	<Language>
+	<!--- Russian -->
+	<SubGalleryName>Первая</SubGalleryName>
+	<Info>Крутая такая сабгаллерея</Info>
+	</Language>
+ 
+</Languages>

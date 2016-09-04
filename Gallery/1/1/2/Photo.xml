@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Languages>
+
+	<Language>
+	<!--- English -->
+	<PhotoName>photo1 </PhotoName>
+	<Info>photo1  info</Info>
+	<Label1>photo1 label1</Label1>
+	<Label2>photo1  label2</Label2>
+	</Language>
+	
+	<Language>
+	<!--- Russian-->
+	<PhotoName>Фото 1</PhotoName>
+	<Info>Sаллала</Info>
+	<Label1>ываыва</Label1>
+	<Label2>кркуер</Label2>
+	</Language>
+ 
+</Languages>
